@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Mensaje struct {
@@ -40,14 +41,20 @@ func LeerConsola() Paquete {
 
 	log.Println("Ingrese los mensajes")
 
-	mensaje, _ := reader.ReadString('\n')
-	for mensaje != "\r\n" {
+	mensaje := LeerLinea(reader)
+	for mensaje != "" {
 		log.Print(mensaje)
 		mensajes = append(mensajes, mensaje)
-		mensaje, _ = reader.ReadString('\n')
+		mensaje = LeerLinea(reader)
 	}
 
 	return Paquete{mensajes}
+}
+
+func LeerLinea(reader *bufio.Reader) string {
+	mensaje, _ := reader.ReadString('\n')
+	mensaje = strings.TrimSpace(mensaje)
+	return mensaje
 }
 
 func GenerarYEnviarPaquete() {
